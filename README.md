@@ -12,12 +12,14 @@ For each case of over-privilege, we provide benign and malicious datasets in our
 The tools executables are provided and have been tested on a Mac computer. Use the following commands when running the executables:
 
 For "Static analysis - Case 1":
-static_case_1.x ${filename}
+./static_case_1.x ${filename}
 
 For "Static/Semantic analysis - Cases 1, 2 & 3":
-static_semantic_cases123.x test.txt --filename ${filename}
+
+./static_semantic_cases123.x ./test.txt --filename ${filename}
 
 For "Static/Semantic analysis - Cases 2 & 3":
-static_semantic_cases23.x test.txt --filename ${filename}
+
+./static_semantic_cases23.x ./test.txt --filename ${filename}
 
 (create an empty text file and name it test.txt to use it in the commands)
