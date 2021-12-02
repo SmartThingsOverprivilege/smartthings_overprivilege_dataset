@@ -9,7 +9,19 @@ In this research, we refer to over-privilege in SmartThings according to three c
 
 For each case of over-privilege, we provide benign and malicious datasets in our benchmark for testing the efficiency of our software analysis tool.
 
-The tools executables are provided and have been tested on a Mac computer. Use the following commands when running the executables:
+****************************************
+The tools executables are provided for Linux and Mac.
+
+Use the following commands when running the executables on Linux:
+
+For ChYP - Static Analysis (case 1), tested on Arch Linux:
+
+./main.x  sample_app.groovy
+
+The results are shown in "report.txt".
+
+****************************************
+Use the following commands when running the executables on Mac:
 
 For "Static analysis - Case 1":
 
