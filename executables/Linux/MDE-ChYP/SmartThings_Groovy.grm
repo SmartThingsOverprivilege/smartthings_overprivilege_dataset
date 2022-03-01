@@ -1,0 +1,578 @@
+comments
+    //
+    /*  */
+    /** */
+    /**/
+end comments
+
+keys
+  'abstract 'as 'assert 'boolean 'break 'byte 'case 'catch 'char 'const 'continue
+  'def 'default 'do 'double 'else 'false 'final 'finally 'float 'for 'goto 'int
+  'if 'import 'in 'instanceof 'long 'native 'new 'null 'private 'protected 'public
+  'return 'short 'static 'strictfp 'super  'synchronized 'this 'thow 'throws
+  'transient 'trait 'threadsage 'true 'try 'var 'void 'volatile 'while
+end keys
+
+tokens
+    charlit                   ""
+    stringlit                 ""
+    n                         "\n"
+    id                        "\u\i*"
+    capitalized_identifier    "\A\i*"
+    floating_point_literal    "\d+.\d+([eE([-\+]?\d+)])?[fFdDgG]?"
+                            | "\d+([eE([-\+]?\d+)])[fFdDgG]?"
+                            | "\d+[fFdDgG]"
+                            | "(0[xX][abcdefABCDEF\d]+.?)([pP[-\+]\d+])[fFdDgG]?"
+                            | "(0[xX][abcdefABCDEF\d]*.[abcdefABCDEF\d]+)([pP[-\+]\d+])[fFdDgG]?"
+    integer_literal           "[0([123456789]\d*)][lLiIgG]?"  %Decimal
+                            | "0[xX][abcdefABCDEF\d]+[lLiIgG]?" %Hex
+                            | "0_*[01234567]+[lLiIgG]?" %Octal
+                            | "0[bB][01]+[lLiIgG]?" %Binary
+string_char_special_1         "[(://)(\\$)@^!§%&\(\)=\?°{\[\]}´`<>|,;.:\*\+\#-–’‘“”…©~®트에너지서비를이용하시려면매월일주택고압₩가입과접근권한필요합니다아래버튼을누르인증작사]"
+string_char_special_2         "[계획원간스마으로력세표단위약종별자알람설정연결되었습눌러속진행해도미터상태랭킹정기기등록및연결진행연결이실패했습]"
+slash_string_exempt           "(\\/)"
+end tokens
+
+compounds
+    ... ** << >>> >>  .. ..<  == != <= >= === !=== == != <=> =~ ==~ || .& ?: //
+end compounds
+
+define program
+    [repeat program_statement]
+end define
+
+define program_statement
+    [import_declaration]
+  | [header_element]
+  | [method_declaration]
+  | [n+]
+end define
+
+define import_declaration
+    'import [opt 'static] [class_name] [opt semi]
+  | 'import [opt 'static] [class_name] '.* [opt semi]
+  | 'import [opt 'static] [class_name] 'as [identifier] [opt semi]
+end define
+
+%%%%%%% Method Declaration %%%%%
+
+define method_declaration
+    [repeat modifier] [opt type] [method_name] [formal_parameters] [opt throw_initalizer] [method_body]
+end define
+
+define modifier
+    'native | 'synchronized | 'transient | 'volatile | 'def | 'var | 'public | 'protected | 'private
+  | 'static | 'abstract | 'final | 'strictfp | 'default
+end define
+
+define type
+    [primitive_type] [repeat dim]
+  | [capitalized_identifier] [repeat dim]
+  | [class_name]
+  | 'void
+end define
+
+define primitive_type
+    'boolean | 'char | 'byte | 'short | 'int | 'long | 'float | 'double
+end define
+
+define dim
+    '[ ']
+end define
+
+define method_name
+    [identifier]
+  | [string_literal]
+end define
+
+define formal_parameters
+    '( [list formal_parameter] ')
+end define
+
+define formal_parameter
+    [opt modifier] [opt type] [opt '...] [variable_declarator]
+  | [argument]
+end define
+
+define throw_initalizer
+    'throws [list class_name+]
+end define
+
+define method_body
+    [block]
+end define
+
+define class_name
+    [repeat class_name_element][identifier]
+end define
+
+define class_name_element
+    [identifier] '.
+end define
+
+define block
+     [n*] '{  [IN] 
+        [repeat statement] [EX][n*]
+    '}  
+end define
+
+%%%%%%% Statements %%%%%%%
+
+define statement
+    [n*] [block] 
+  | [n*] [semi] 
+  | [n*] [if_statement] 
+  | [n*] [switch_statement] 
+  | [n*] [for_statement] 
+  | [n*] [while_statement] 
+  | [n*] [do_statement] 
+  | [n*] [try_catch_statement] 
+  | [n*] [synchronized_statement] 
+  | [n*] [return_statement] 
+  | [n*] [throw_statement] 
+  | [n*] [break_statement] 
+  | [n*] [continue_statement] 
+  | [n*] [label_statement] 
+  | [n*] [assert_statement] 
+  | [n*] [variable_declaration] 
+  | [n*] [command_expression] 
+  | [n*] [expression] 
+end define
+
+define if_statement
+    'if [expression_in_par] [n*]
+        [statement] [opt semi]
+    [opt else_clause]
+end define
+
+define else_clause
+    [n*] 'else [n*]   [IN]
+        [statement]   [EX]
+end define
+
+define switch_statement
+    'switch [expression_in_par] [n*] '{   [IN][n*]
+        [repeat switch_block_statement]   [EX]
+    '}
+end define
+
+define switch_block_statement
+    [repeat switch_label+] [IN]
+        [repeat statement] [n*] [EX]
+end define
+
+define switch_label
+    'case [expression] ':
+  | 'default ':
+end define
+
+define for_statement
+    'for '( [for_control] ') [statement]
+end define
+
+define for_control
+    [opt variable_declaration] '; [expression] '; '++i
+  | [opt variable_declaration] '; [expression] '; [list expression+]
+  | [repeat modifier] [opt type] [variable_name] 'in [expression]
+  | [repeat modifier] [opt type] [variable_name] ': [expression]
+end define
+
+define for_init
+    [variable_declaration]
+  | [list expression+]
+end define
+
+define while_statement
+    'while [expression_in_par] [block]
+end define
+
+define do_statement
+    'do [block]
+    'while [expression_in_par]
+end define
+
+define try_catch_statement
+    'try [block]
+    [repeat catch_clause]
+    [opt finally_clause]
+end define
+
+define catch_clause
+    [n*] 'catch '( [opt modifier] [opt catch_type] [identifier] ') [block]
+end define
+
+define catch_type
+    [class_name] [repeat or_class_name]
+end define
+
+define or_class_name
+    '| [class_name]
+end define
+
+define finally_clause
+    [n*] 'finally [block]
+end define
+
+define synchronized_statement
+    'synchronized [expression_in_par] [block]
+end define
+
+define return_statement
+    'return [opt expression] [opt semi]
+end define
+
+define throw_statement
+    'throw [expression]
+end define
+
+define break_statement
+    'break [opt identifier]
+end define
+
+define continue_statement
+    'continue [opt identifier]
+end define
+
+define label_statement
+    [identifier] ':  [statement]
+end define
+
+define assert_statement
+    'assert [expression]
+  | 'assert [expression] ': [expression]
+  | 'assert [expression] '= [expression]
+end define
+
+%%%%%%% Expression %%%%%%%
+
+define expression
+    [expression_in_par]
+  | '* [expression]
+  | [cast_par] [expression]
+  | [prefix_op] [expression]
+  | [expression] [postfix_op]
+  | [command_expression]
+  | [expression] [in_op] [n*] [expression]
+  | [expression] [in_op_type] [type]
+  | [expression] '? [n*] [expression] ': [n*] [expression]
+end define
+
+define expression_in_par
+    '( [n*] [expression] [n*]')
+end define
+
+define cast_par
+    '( [type] ')
+end define
+
+define command_expression
+   [path_expression] [list argument]
+end define
+
+define path_expression
+    [primary] [repeat path_element]
+end define
+
+define arguments
+    '( [list argument] [opt ',] [n*] ')
+end define
+
+define argument
+    [expression]
+  | [map_entry]
+end define
+
+define command_argument
+    [primary]
+  | [primary] [repeat path_element+]
+  | [primary] [list argument+]
+end define
+
+%%%%%%% Variable Decaration %%%%%%%
+
+define variable_declaration
+    [repeat modifier+] [opt type] [list variable_declarator+] [opt semi]
+  | [repeat modifier+] [list type_name_pairs] [variable_assign_initalizer] [opt semi]
+  | [repeat modifier] [type] [list variable_declarator+] [opt semi]
+  | [repeat modifier] [opt type] [list variable_declarator_fixed_assign+] [opt semi]
+end define
+
+define variable_declarator
+    [n*] [variable_name] [opt variable_assign_initalizer]
+end define
+
+define variable_declarator_fixed_assign
+    [n*] [variable_name] [variable_assign_initalizer]
+end define
+
+define variable_name
+    [identifier]
+end define
+
+define variable_assign_initalizer
+    '= [n*] [expression]
+end define
+
+define type_name_pairs
+    '( [list type_name_pair+] ')
+end define
+
+define type_name_pair
+    [opt type] [variable_name]
+end define
+
+%%%%%%% Primary & Path element %%%%%%%%
+
+define primary
+    [null_literal]
+  |  [literal]
+  | [identifier]
+  | [creator]
+  | [expression_in_par]
+  | [listing]
+  | [closure]
+  | [map]
+end define
+
+define literal
+    [integer_literal]
+  | [floating_point_literal]
+  | [string_literal]
+  | [boolean_literal]
+  | [null_literal]
+end define
+
+define null_literal
+    'null
+end define
+
+define boolean_literal
+    'true | 'false
+end define
+
+define string_literal
+    [n*] [triple_double_quote_string]
+  | [n*] [triple_single_quote_string]
+  | [n*] [single_quote_string]
+  | [n*] [double_quote_string]
+  | [n*] [slash_string]
+end define
+
+define single_quote_string
+    '' [repeat single_quote_string_element] [repeat single_quote_gstring] ''
+end define
+
+define double_quote_string
+    '" [repeat double_quote_string_element] [repeat double_quote_gstring] '"
+end define
+
+define double_quote_string_filled
+    '" [repeat double_quote_string_element+] [repeat double_quote_gstring] '"
+  | '" [repeat double_quote_string_element] [repeat double_quote_gstring+] '"
+end define
+
+define triple_double_quote_string
+    '""" [repeat triple_double_quote_string_element] [repeat triple_double_quote_gstring] '"""
+end define
+
+define triple_single_quote_string
+    '' '' '' [repeat triple_single_quote_string_element] '' '' ''
+end define
+
+define slash_string
+    [opt '~] '/ [repeat slash_string_element] '/
+  | [opt '~] '/ [repeat slash_string_element] '\//
+end define
+
+define string_element
+    [id]
+  | [capitalized_identifier]
+  | [key]
+  | [integer_literal]
+  | [floating_point_literal]
+  | [string_char_special_1]
+  | [string_char_special_2]
+  | [in_op]
+  | '...
+end define
+
+define single_quote_string_element
+    [string_element]
+  | '\
+  | '/
+  | [double_quote_string_filled]
+  | '\'
+end define
+
+define double_quote_string_element
+    [string_element]
+  | '\"
+  | '/
+  | '\
+  | [single_quote_string]
+  | ''
+end define
+
+define triple_single_quote_string_element
+    [string_element]
+  | '\
+  | '/
+  | [n]
+  | [single_quote_string]
+end define
+
+define triple_double_quote_string_element
+    [string_element]
+  | '\
+  | '/
+  | [n]
+  | [single_quote_string]
+  | ''
+  | [double_quote_string_filled]
+end define
+
+define slash_string_element
+    [string_element]
+  | '"
+  | ''
+  | [slash_string_exempt]
+  | '\
+end define
+
+define single_quote_gstring
+    [gstring_part] [repeat single_quote_string_element]
+end define
+
+define double_quote_gstring
+    [gstring_part] [repeat double_quote_string_element]
+end define
+
+define triple_double_quote_gstring
+    [gstring_part] [repeat triple_double_quote_string_element]
+end define
+
+define gstring_part
+    '$ [block]
+  | '$ [path_expression]
+end define
+
+define identifier
+    [lnid]
+  | [capitalized_identifier]
+  | [smart_things_identifier]
+  | [exempts_identifer]
+end define
+
+define lnid
+    [srclinenumber?] [id]
+end define
+
+define smart_things_identifier
+    'dynamicPage | 'page
+end define
+
+define exempts_identifer
+    'switch | 'in | 'default | 'false
+end define
+
+define creator
+    'new [created_name] [arguments] [opt block]
+  | 'new [created_name] [repeat dim+] [array_initializer]
+  | 'new [created_name] [repeat filled_dim+] [repeat dim]
+end define
+
+define created_name
+    [primitive_type] | [class_name]
+end define
+
+define array_initializer
+    '{ [list expression] [opt ',] '}
+end define
+
+define filled_dim
+    '[ [expression] ']
+end define
+
+define listing
+     '[ [list listing_expression]  [opt ,] [n*] ']
+end define
+
+define listing_expression
+    [n*] [expression]
+end define
+
+define map
+    [n*] '[ [list map_entry+] [opt ',][n*] ']
+  | '[ ': ']
+end define
+
+define map_entry
+   [n*] [primary] ': [n*] [expression]
+  | [n*] [primary] ': [expression] '?: [expression]
+  | [n*] [primary] ': [expression] '? [expression] ':  [expression]
+  | [n*] '* ': [expression]
+end define
+
+define closure
+    [n*] '{ [opt closure_parameter] [IN][n*]
+        [repeat statement] [n*] [EX]
+    '}
+end define
+
+define closure_parameter
+    [list formal_parameter] '->
+end define
+
+define path_element
+    [opt dot_op] '. [name_part]
+  | '.& [name_part]
+  | ':: [name_part]
+  | '. [creator]
+  | [arguments]
+  | [closure]
+  | [index_property_args]
+  | [named_property_args]
+end define
+
+define name_part
+    [identifier] | [string_literal] %[gstring]
+end define
+
+define index_property_args
+    [opt '?] '[ [list expression] ']
+end define
+
+define named_property_args
+    '[ [list map_entry+] ']
+end define
+
+%%%%%%% Operators %%%%%%%
+
+define dot_op
+    '* | '? | '??
+end define
+
+define prefix_op
+    '++ | '-- | '+ | '- | '~ | '!
+end define
+
+define in_op
+    '** | '* | '/ | '% | '+ | '- | '<< | '>>> | '>> | '..
+  | '..< | '== | '!= | '<= | '>= | '> | '< | 'in | '!in
+  | '=== | '!=== | '== | '!= | '<=> | '=~ | '==~ | '&
+  | '^ | '| | '| | '&& | '||[n*] | '?: | '= | '+= | '-=
+  | '*= | '/= | '&= | '|= | '^= | '>>= | '<<= | '>>>=
+  | '%= | '**= | '?=
+end define
+
+define in_op_type
+    'as | 'instanceof | '!instanceof
+end define
+
+define postfix_op
+    '++ | '--
+end define
+
+define semi
+    ';
+end define

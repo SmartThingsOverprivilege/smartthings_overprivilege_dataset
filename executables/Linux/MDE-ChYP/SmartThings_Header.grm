@@ -1,0 +1,39 @@
+keys
+    'appSetting 'definition 'include 'mappings 'preferences 'cards 'dynamicPage
+end keys
+
+define header_element
+    [definition] | [preferences] | [mappings] | [including] | [cards]
+end define
+
+define including
+    'include [string_literal]
+end define
+
+define definition
+    'definition '(               [IN][n*] 
+       [list map_entry] [opt',]  [EX][n*] 
+    ') [opt settings] 
+end define
+
+define settings
+    [n*] '{  [IN]
+        [repeat app_setting][n*]  [EX]
+    '}
+end define
+
+define app_setting
+    [n*] 'appSetting [string_literal]
+end define
+
+define preferences
+    'preferences [opt arguments] [block]
+end define
+
+define cards
+    'cards [opt arguments] [block]
+end define
+
+define mappings
+    'mappings [block]
+end define

@@ -1,0 +1,26 @@
+define two_identifiers_table
+    [n*] [id] -> [id] [n*]
+    | [n*] [stringlit] -> [id] [n*]
+end define
+
+define four_identifiers_table
+    [n*] [id] -> [id] -> [id] -> [id] [n*]
+    | [n*] [stringlit] -> [id] -> [id] -> [id] [n*]
+end define
+
+define message_element
+        [n*] [identifier] [n*]
+    |   [n*] [string_element] [n*]
+    |   [n*] [stringlit] [n*]
+    |   [n*] [oneSpace] [n*]
+    |   [n*] [oneLine] [n*]
+    |   [n*] [program] [n*]
+end define
+
+define oneSpace
+    [SP]
+end define
+
+define oneLine
+    [NL]
+end define

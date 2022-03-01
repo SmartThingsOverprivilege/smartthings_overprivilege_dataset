@@ -1,0 +1,1181 @@
+% TODO: add ' " �
+% devices synonyms from each description
+% indicators for apps 200+
+
+tokens
+    charlit                   ""
+    stringlit                 ""
+    n                         "\n"
+    id                        "\u\i*"
+    capitalized_identifier    "\A\i*"
+    floating_point_literal    "\d+.\d+([eE([-\+]?\d+)])?[fFdDgG]?"
+                            | "\d+([eE([-\+]?\d+)])[fFdDgG]?"
+                            | "\d+[fFdDgG]"
+                            | "(0[xX][abcdefABCDEF\d]+.?)([pP[-\+]\d+])[fFdDgG]?"
+                            | "(0[xX][abcdefABCDEF\d]*.[abcdefABCDEF\d]+)([pP[-\+]\d+])[fFdDgG]?"
+    integer_literal           "[0([123456789]\d*)][lLiIgG]?"  %Decimal
+	string_char_special_1     "[(://)(\\$)@^!§%&\(\)=\?°{\[\]}´`<>|,;.:\*\+\#-–’‘“”…©~®트에너지서비를이용하시려면매월일주택고압₩가입과접근권한필요합니다아래버튼을누르인증작사]"
+	string_char_special_2     "[계획원간스마으로력세표단위약종별자알람설정연결되었습눌러속진행해도미터상태랭킹정기기등록및연결진행연결이실패했습]"
+	slash_string_exempt       "(\\/)"
+end tokens
+
+keys
+    % indicators for trigger. "case" is for "in case"
+    when whenever case
+    % indicators for condition
+    if bellow twice for attached 'by based controlled from 
+    at to via according after same until above during in 
+    'where while using whether once only
+	% indicators for rules
+	'and
+    % indicators for action?
+    % indicators for device?
+end keys
+
+define description
+    [repeat permission_rule]
+end define
+
+define permission_rule
+	[opt 'and]
+    [repeat rule_component]
+end define
+
+define rule_component
+    [trigger]
+|   [condition]
+|   [action]
+|	''
+end define
+
+define action
+    [repeat component_element]
+end define
+
+define trigger
+    [trigger_indicator]
+    [repeat component_element]
+end define
+
+define trigger_indicator
+    when | whenever | case
+end define
+
+define condition
+    [condition_indicator]
+    [repeat component_element]
+end define
+
+define condition_indicator
+    if | bellow | twice | for | attached | 'by | based | controlled | 
+    from | at | to | via | according | after | same | until | above | 
+    during | in | 'where | while | using | whether | once | only
+end define
+
+define component_element
+    [device]
+|   [attribute]
+|   [value]
+|   [word]
+|   [string_char_special_1]
+|   [string_char_special_2]
+|	'NA
+|	[slash]
+end define
+
+define slash
+	'/
+end define
+
+define device
+    [accelerationSensor]| [alarm] | [audioNotification] | [battery] | [beacon] |
+    [bulb] | [button] | [carbonDioxideMeasurement] | [colorControl] | [colorTemperature] |
+    [configuration] | [consumable] | [contactSensor] | [doorControl] | [energyMeter] |
+    [estimatedTimeOfArrival] | [garageDoorControl] | [holdableButton] | [illuminanceMeasurement] | 
+    [imageCapture] | [indicator] | [infraredLevel] | [light] | [lockOnly] | [lock] | [mediaController] | 
+    [momentary] | [motionSensor] | [musicPlayer] | [notification] | [outlet] | [pHMeasurement] | 
+    [polling] | [powerMeter] | [powerSource] | [presenceSensor] | [refresh] | [relativeHumidityMeasurement] | 
+    [relaySwitch] | [shockSensor] | [signalStrength] | [sleepSensor] | [smokeDetector] | [soundPressureLevel] | 
+    [soundSensor] | [speechRecognition] | [speechSynthesis] | [stepSensor] | [switchLevel] | [switch] | 
+    [tamperAlert] | [temperatureMeasurement] | [thermostatCoolingSetpoint] | [thermostatFanMode] | 
+    [thermostatHeatingSetpoint] | [thermostatMode] | [thermostatOperatingState] | [thermostatSetpoint] | 
+    [thermostat] | [threeAxis] | [timedSession] | [tone] | [touchSensor] | [ultravioletIndex] | [valve] | 
+    [voltageMeasurement] | [waterSensor] | [windowShade]
+end define
+
+define attribute
+	[accelerationAttribute] | [alarmAttribute] | [bothAttribute] | [offAttribute] | [sirenAttribute] | 
+	[strobeAttribute] | [playTextAttribute] | [playTextAndResumeAttribute] | [playTextAndRestoreAttribute] | 
+	[batteryAttribute] | [presenceAttribute] | [switchAttribute] | [onAttribute] | [buttonAttribute] | 
+	[numberOfButtonsAttribute] | [carbonDioxideAttribute] | [carbonMonoxideAttribute] | [colorAttribute] | 
+	[hueAttribute] | [saturationAttribute] | [setColorAttribute] | [setHueAttribute] | [setSaturationAttribute] | 
+	[colorTemperatureAttribute] | [setColorTemperatureAttribute] | [configureAttribute] | [consumableStatusAttribute] | 
+	[setConsumableStatusAttribute] | [contactAttribute] | [doorAttribute] | [closeAttribute] | [openAttribute] | 
+	[energyAttribute] | [etaAttribute] | [illuminanceAttribute] | [imageAttribute] | [takeAttribute] | 
+	[indicatorStatusAttribute] | [indicatorNeverAttribute] | [indicatorWhenOffAttribute] | [indicatorWhenOnAttribute] | 
+	[infraredLevelAttribute] | [setInfraredLevelAttribute] | [lockAttribute] | [unlockAttribute] | 
+	[activitiesAttribute] | [currentActivityAttribute] | [startActivityAttribute] | [pushAttribute] | [motionAttribute] | 
+	[levelAttribute] | [muteAttribute] | [statusAttribute] | [trackDataAttribute] | [trackDescriptionAttribute] | 
+	[nextTrackAttribute] | [pauseAttribute] | [playAttribute] | [playTrackAttribute] | [previousTrackAttribute] | 
+	[restoreTrackAttribute] | [resumeTrackAttribute] | [setLevelAttribute] | [setTrackAttribute] | [stopAttribute] | 
+	[unmuteAttribute] | [deviceNotificationAttribute] | [pHAttribute] | [pollAttribute] | [powerAttribute] | 
+	[powerSourceAttribute] | [refreshAttribute] | [humidityAttribute] | [shockAttribute] | [lqiAttribute] | 
+	[rssiAttribute] | [sleepingAttribute] | [smokeAttribute] | [soundPressureLevelAttribute] | [soundAttribute] | 
+	[phraseSpokenAttribute] | [speakAttribute] | [goalAttribute] | [stepsAttribute] |
+	[tamperAttribute] | [temperatureAttribute] | [coolingSetpointAttribute] | [coolingSetpointRangeAttribute] | 
+	[setCoolingSetpointAttribute] | [thermostatFanModeAttribute] | [supportedThermostatFanModesAttribute] | 
+	[fanAutoAttribute] | [fanCirculateAttribute] | [fanOnAttribute] | [setThermostatFanModeAttribute] | 
+	[heatingSetpointAttribute] | [heatingSetpointRangeAttribute] | [setHeatingSetpointAttribute] | 
+	[thermostatModeAttribute] | [presetPositionAttribute] |[supportedThermostatModesAttribute] | [autoAttribute] | 
+	[coolAttribute] | [emergencyHeatAttribute] | [heatAttribute] | [setThermostatModeAttribute] | 
+	[thermostatOperatingStateAttribute] | [thermostatSetpointAttribute] | [thermostatSetpointRangeAttribute] | 
+	[scheduleAttribute] | [setScheduleAttribute] | [threeAxisAttribute] | [sessionStatusAttribute] | [timeRemainingAttribute] | 
+	[cancelAttribute] | [setTimeRemainingAttribute] | [startAttribute] | [beepAttribute] | [touchAttribute] | 
+	[ultravioletIndexAttribute] | [valveAttribute] | [voltageAttribute] | [waterAttribute] | [windowShadeAttribute]
+end define
+
+define value
+	% To Add:
+	%[number] | [integer from 0 to 100] | [integer 0 to 1000000] |
+	%[integer positive] | [date] | [number 0 to 14] | [number 0 to 255] |
+	%[number -200 to 0] |
+	% Explicit values %
+	[activeValue] | [inactiveValue] | [bothValue] | [offValue] | [sirenValue] | [strobeValue] |
+	[notPresentValue] | [presentValue] | [onValue] | [heldValue] | [pushedValue] | [clearValue] | 
+	[detectedValue] | [testedValue] | [goodValue] | [maintenance_requiredValue] | [missingValue] | 
+	[orderValue] | [replaceValue] | [closedValue] | [openValue] | [closingValue] |
+	[openingValue] | [unkownValue] | [neverValue] | [whenOffValue] | [whenOnValue] | 
+	[lockedValue] | [unlockedValue] | [unlockedWithTimeoutValue] | [mutedValue] | [unmutedValue] | 
+	[batteryValue] | [dcValue] | [mainsValue] | [sleepingValue] | [notSleepingValue] | [autoValue] | 
+	[circulateValue] | [followscheduleValue] | [ecoValue] | [rushHourValue] | [coolValue] | 
+	[emergencyHeatValue] | [heatValue] | [coolingValue] | [fanOnlyValue] | [heatingValue] | 
+	[idleValue] | [pendingCoolValue] | [pendingHeatValue] | [ventEconomizerValue] | [canceledValue] | 
+	[pausedValue] | [runningValue] | [stoppedValue] | [touchedValue] | [dryValue] | [wetValue] | 
+	[partiallyOpenValue]
+end define
+
+define word
+    [charlit]
+|   [stringlit]
+|   [id]
+|   [capitalized_identifier]   
+|   [integer_literal]
+end define
+
+%*********************************************DEVICE DEFINITIONS*********************************************%
+
+define accelerationSensor
+	'accelerationSensor | 'vibration | 'moves | 'knocked | 'Accelerometers | 'movement | 'stopped | 'arrives | 'knock | 'Accelerations | 'knocks
+end define
+
+define alarm
+    'alarm | 'alert | 'alerts | 'alarms | 'siren | 'sirens
+end define
+
+define audioNotification
+	'audioNotification 
+end define
+
+define battery
+	'battery | 'batteries
+end define
+
+define beacon
+	'beacon | 'beacons
+end define
+
+define bulb
+	'bulb 
+end define
+ 
+define button
+	'button | 'Minimote | 'buttons
+end define
+
+define carbonDioxideMeasurement
+	'carbonDioxideMeasurement | 'Carbon 'Dioxide 'Detectors | 'co2
+end define
+
+define carbonMonoxideDetector
+	'carbonMonoxideDetector | 'Carbon 'Monoxide 'Detectors
+end define
+
+define colorControl
+	'colorControl | 'color | 'Color 'Controllers | 'led | 'lights | 'hue
+end define
+
+define colorTemperature
+	'colorTemperature | 'color 'temperature
+end define
+
+define configuration
+	'configuration 
+end define
+
+define consumable
+	'consumable | 'consumables
+end define
+
+define contactSensor
+	'contactSensor | 'opens | 'opened | 'door | 'contact | 'closed | 'open | 'close
+end define
+
+define doorControl
+	'doorControl | 'Door 'Controllers 
+end define
+
+define energyMeter
+	'energyMeter | 'energy | 'meter | 'meters | 'level
+end define
+
+define estimatedTimeOfArrival
+	'estimatedTimeOfArrival 
+end define
+
+define garageDoorControl
+	'garageDoorControl | 'garage 'doors
+end define
+
+define holdableButton
+	'holdableButton 
+end define
+
+define illuminanceMeasurement
+	'illuminanceMeasurement | 'dark | 'light | 'illuminance | 'luminosity
+end define
+
+define imageCapture
+	'imageCapture | 'pictures | 'cameras
+end define
+
+define indicator
+	'indicator 
+end define
+
+define infraredLevel
+	'infraredLevel 
+end define
+
+define light
+	'light 
+end define
+
+define lockOnly
+	'lockOnly 
+end define
+
+define lock
+	'lock | 'locks | 'locked | 'unlocks
+end define
+
+define mediaController
+	'mediaController 
+end define
+
+define momentary
+	'momentary 
+end define
+
+define motionSensor
+	'motionSensor | 'motion | 'movement | 'around | 'moving | 'away
+end define
+
+define musicPlayer
+	'musicPlayer | 'music | 'Sonos
+end define
+
+define notification
+	'notification | 'notifications
+end define
+
+define outlet
+	'outlet | 'outlets
+end define
+
+define pHMeasurement
+	'pHMeasurement | 'ph
+end define
+
+define polling
+	'polling 
+end define
+
+define powerMeter
+	'powerMeter | 'power
+end define
+
+define powerSource
+	'powerSource 
+end define
+
+define presenceSensor
+	'presenceSensor | 'arrive | 'arrives | 'away | 'present | 'leave | 'home | 'presence | 'arrival | 'departure | 'out
+end define
+
+define refresh
+	'refresh 
+end define
+
+define relativeHumidityMeasurement
+	'relativeHumidityMeasurement | 'humidity
+end define
+
+define relaySwitch
+	'relaySwitch | 'relay
+end define
+
+define shockSensor
+	'shockSensor | 'shock
+end define
+
+define signalStrength
+	'signalStrength | 'signal
+end define
+
+define sleepSensor
+	'sleepSensor | 'sleep
+end define
+
+define smokeDetector
+	'smokeDetector | 'smoke
+end define
+
+define soundPressureLevel
+	'soundPressureLevel | 'sound 'Pressure 'Level
+end define
+
+define soundSensor
+	'soundSensor | 'sound
+end define
+
+define speechRecognition
+	'speechRecognition 
+end define
+
+define speechSynthesis
+	'speechSynthesis | 'speak | 'speech
+end define
+
+define stepSensor
+	'stepSensor | 'Pedometers
+end define
+
+define switchLevel
+	'switchLevel | 'switch 'level | 'switch 'levels | 'Adjustable 'Switches | 'dimmers
+end define
+
+define switch
+	'switch | 'turn | 'turns | 'switches | 'turning | 'activate
+end define
+
+define tamperAlert
+	'tamperAlert | 'tamper
+end define
+
+define temperatureMeasurement
+	'temperatureMeasurement | 'temperature | 'temperatures
+end define
+
+define thermostatCoolingSetpoint
+	'thermostatCoolingSetpoint 
+end define
+
+define thermostatFanMode
+	'thermostatFanMode 
+end define
+
+define thermostatHeatingSetpoint
+	'thermostatHeatingSetpoint 
+end define
+
+define thermostatMode
+	'thermostatMode 
+end define
+
+define thermostatOperatingState
+	'thermostatOperatingState 
+end define
+
+define thermostatSetpoint
+	'thermostatSetpoint 
+end define
+
+define thermostat
+	'thermostat | 'thermostats
+end define
+
+define threeAxis
+	'threeAxis | 'axis
+end define
+
+define timedSession
+	'timedSession 
+end define
+
+define tone
+	'tone 
+end define
+
+define touchSensor
+	'touchSensor | 'nfc | 'touch
+end define
+
+define ultravioletIndex
+	'ultravioletIndex | 'uv
+end define
+
+define valve
+	'valve | 'valves
+end define
+
+define voltageMeasurement
+	'voltageMeasurement | 'voltage
+end define
+
+define waterSensor
+	'waterSensor | 'water | 'water 'Sensors 
+end define
+
+define windowShade
+	'windowShade | 'window 'shades | 'window 'shade | 'window
+end define
+
+%*********************************************ATTRIBUTE DEFINITIONS*********************************************%
+
+define accelerationAttribute
+	'acceleration | 'sensed | 'move
+end define
+
+define alarmAttribute
+	'alarm
+end define
+
+define bothAttribute
+	'both
+end define
+
+define offAttribute
+	'off
+end define
+
+define sirenAttribute
+	'siren
+end define
+
+define strobeAttribute
+	'strobe
+end define
+
+define playTextAttribute
+	'playText
+end define
+
+define playTextAndResumeAttribute
+	'playTextAndResume
+end define
+ 
+define playTextAndRestoreAttribute
+	'playTextAndRestore
+end define
+
+define batteryAttribute
+	'battery
+end define
+
+define presenceAttribute
+	'presence | 'arrive | 'away
+end define
+
+define switchAttribute
+	'switch
+end define
+
+define onAttribute
+	'on
+end define
+
+define buttonAttribute
+	'button
+end define
+
+define numberOfButtonsAttribute
+	'numberOfButtons
+end define
+ 
+define carbonDioxideAttribute
+	'carbonDioxide
+end define
+
+define carbonMonoxideAttribute
+	'carbonMonoxide
+end define
+
+define colorAttribute
+	'color
+end define
+
+define hueAttribute
+	'hue
+end define
+
+define saturationAttribute
+	'saturation
+end define
+
+define setColorAttribute
+	'setColor
+end define
+
+define setHueAttribute
+	'setHue
+end define
+ 
+define setSaturationAttribute
+	'setSaturation
+end define
+
+define colorTemperatureAttribute
+	'colorTemperature
+end define
+
+define setColorTemperatureAttribute
+	'setColorTemperature
+end define
+
+define configureAttribute
+	'configure
+end define
+
+define consumableStatusAttribute
+	'consumableStatus
+end define
+ 
+define setConsumableStatusAttribute
+	'setConsumableStatus
+end define
+
+define contactAttribute
+	'contact | 'opens
+end define
+
+define doorAttribute
+	'door
+end define
+
+define closeAttribute
+	'close
+end define
+
+define openAttribute
+	'open
+end define
+
+define energyAttribute
+	'energy
+end define
+
+define etaAttribute
+	'eta
+end define
+
+define illuminanceAttribute
+	'illuminance
+end define
+ 
+define imageAttribute
+	'image
+end define
+
+define takeAttribute
+	'take
+end define
+
+define indicatorStatusAttribute
+	'indicatorStatus
+end define
+
+define indicatorNeverAttribute
+	'indicatorNever
+end define
+
+define indicatorWhenOffAttribute
+	'indicatorWhenOff
+end define
+
+define indicatorWhenOnAttribute
+	'indicatorWhenOn
+end define
+ 
+define infraredLevelAttribute
+	'infraredLevel
+end define
+
+define setInfraredLevelAttribute
+	'setInfraredLevel
+end define
+
+define lockAttribute
+	'lock
+end define
+
+define unlockAttribute
+	'unlock
+end define
+
+define activitiesAttribute
+	'activities
+end define
+
+define currentActivityAttribute
+	'currentActivity
+end define
+ 
+define startActivityAttribute
+	'startActivity
+end define
+
+define pushAttribute
+	'push
+end define
+
+define motionAttribute
+	'motion
+end define
+
+define levelAttribute
+	'level
+end define
+
+define muteAttribute
+	'mute
+end define
+
+define statusAttribute
+	'status
+end define
+
+define trackDataAttribute
+	'trackData
+end define
+
+define trackDescriptionAttribute
+	'trackDescription
+end define
+ 
+define nextTrackAttribute
+	'nextTrack
+end define
+
+define pauseAttribute
+	'pause
+end define
+
+define playAttribute
+	'play
+end define
+
+define playTrackAttribute
+	'playTrack
+end define
+
+define previousTrackAttribute
+	'previousTrack
+end define
+
+define restoreTrackAttribute
+	'restoreTrack
+end define
+
+define resumeTrackAttribute
+	'resumeTrack
+end define
+ 
+define setLevelAttribute
+	'setLevel
+end define
+
+define setTrackAttribute
+	'setTrack
+end define
+
+define stopAttribute
+	'stop
+end define
+
+define unmuteAttribute
+	'unmute
+end define
+
+define deviceNotificationAttribute
+	'deviceNotification
+end define
+
+define pHAttribute
+	'pH
+end define
+
+define pollAttribute
+	'poll
+end define
+
+define powerAttribute
+	'power
+end define
+ 
+define powerSourceAttribute
+	'powerSource
+end define
+
+define refreshAttribute
+	'refresh
+end define
+
+define humidityAttribute
+	'humidity
+end define
+
+define shockAttribute
+	'shock
+end define
+
+define lqiAttribute
+	'lqi
+end define
+
+define rssiAttribute
+	'rssi
+end define
+
+define sleepingAttribute
+	'sleeping
+end define
+
+define smokeAttribute
+	'smoke
+end define
+ 
+define soundPressureLevelAttribute
+	'soundPressureLevel
+end define
+
+define soundAttribute
+	'sound
+end define
+
+define phraseSpokenAttribute
+	'phraseSpoken
+end define
+
+define speakAttribute
+	'speak
+end define
+
+define goalAttribute
+	'goal
+end define
+
+define stepsAttribute
+	'steps
+end define
+
+define tamperAttribute
+	'tamper
+end define
+ 
+define temperatureAttribute
+	'temperature
+end define
+
+define coolingSetpointAttribute
+	'coolingSetpoint
+end define
+
+define coolingSetpointRangeAttribute
+	'coolingSetpointRange
+end define
+
+define setCoolingSetpointAttribute
+	'setCoolingSetpoint
+end define
+
+define thermostatFanModeAttribute
+	'thermostatFanMode
+end define
+ 
+define supportedThermostatFanModesAttribute
+	'supportedThermostatFanModes
+end define
+
+define fanAutoAttribute
+	'fanAuto
+end define
+
+define fanCirculateAttribute
+	'fanCirculate
+end define
+
+define fanOnAttribute
+	'fanOn
+end define
+
+define setThermostatFanModeAttribute
+	'setThermostatFanMode
+end define
+ 
+define heatingSetpointAttribute
+	'heatingSetpoint
+end define
+
+define heatingSetpointRangeAttribute
+	'heatingSetpointRange
+end define
+
+define setHeatingSetpointAttribute
+	'setHeatingSetpoint
+end define
+
+define thermostatModeAttribute
+	'thermostatMode
+end define
+
+define presetPositionAttribute
+	'presetPosition
+end define
+
+define supportedThermostatModesAttribute
+	'supportedThermostatModes
+end define
+
+define autoAttribute
+	'auto
+end define
+
+define coolAttribute
+	'cool
+end define
+
+define emergencyHeatAttribute
+	'emergencyHeat
+end define
+
+define heatAttribute
+	'heat
+end define
+
+define setThermostatModeAttribute
+	'setThermostatMode
+end define
+ 
+define thermostatOperatingStateAttribute
+	'thermostatOperatingState
+end define
+
+define thermostatSetpointAttribute
+	'thermostatSetpoint
+end define
+
+define thermostatSetpointRangeAttribute
+	'thermostatSetpointRange
+end define
+
+define scheduleAttribute
+	'schedule
+end define
+ 
+define setScheduleAttribute
+	'setSchedule
+end define
+
+define threeAxisAttribute
+	'threeAxis
+end define
+
+define sessionStatusAttribute
+	'sessionStatus
+end define
+
+define timeRemainingAttribute
+	'timeRemaining
+end define
+
+define cancelAttribute
+	'cancel
+end define
+
+define setTimeRemainingAttribute
+	'setTimeRemaining
+end define
+ 
+define startAttribute
+	'start
+end define
+
+define beepAttribute
+	'beep
+end define
+
+define touchAttribute
+	'touch
+end define
+
+define ultravioletIndexAttribute
+	'ultravioletIndex
+end define
+
+define valveAttribute
+	'valve
+end define
+
+define voltageAttribute
+	'voltage
+end define
+
+define waterAttribute
+	'water
+end define
+
+define windowShadeAttribute
+	'windowShade
+end define
+
+%*********************************************VALUE DEFINITIONS*********************************************%
+
+define activeValue
+	'active | 'moves
+end define
+
+define inactiveValue
+	'inactive | 'no 'motion
+end define
+
+define bothValue
+	'both 
+end define
+
+define offValue
+	'off 
+end define
+
+define sirenValue
+	'siren 
+end define
+
+define strobeValue
+	'strobe 
+end define
+
+define notPresentValue
+	'not 'present | 'leave | 'away
+end define
+
+define presentValue
+	'present | 'arrive
+end define
+
+define onValue
+	'on 
+end define
+
+define heldValue
+	'held 
+end define
+
+define pushedValue
+	'pushed 
+end define
+
+define clearValue
+	'clear 
+end define
+
+define detectedValue
+	'detected 
+end define
+
+define testedValue
+	'tested 
+end define
+
+define goodValue
+	'good 
+end define
+
+define maintenance_requiredValue
+	'Maintenance_required | 'maintenance_required 
+end define
+
+define missingValue
+	'missing 
+end define
+
+define orderValue
+	'order 
+end define
+
+define replaceValue
+	'replace 
+end define
+
+define closedValue
+	'closed 
+end define
+
+define openValue
+	'open | 'opens
+end define
+
+define closingValue
+	'closing 
+end define
+
+define openingValue
+	'opening 
+end define
+
+define unkownValue
+	'unkown
+end define
+
+define neverValue
+	'never 
+end define
+
+define whenOffValue
+	'when 'off 
+end define
+
+define whenOnValue
+	'when 'on 
+end define
+
+define lockedValue
+	'locked 
+end define
+
+define unlockedValue
+	'unlocked 
+end define
+
+define unlockedWithTimeoutValue
+	'unlocked 'with 'timeout 
+end define
+
+define mutedValue
+	'muted 
+end define
+
+define unmutedValue
+	'unmuted 
+end define
+
+define batteryValue
+	'battery 
+end define
+
+define dcValue
+	'dc 
+end define
+
+define mainsValue
+	'mains 
+end define
+
+define sleepingValue
+	'sleeping 
+end define
+
+define notSleepingValue
+	'not 'sleeping 
+end define
+
+define autoValue
+	'auto 
+end define
+
+define circulateValue
+	'circulate
+end define
+
+define followscheduleValue
+	'followschedule 
+end define
+
+define ecoValue
+	'eco 
+end define
+
+define rushHourValue
+	'rush 'hour 
+end define
+
+define coolValue
+	'cool 
+end define
+
+define emergencyHeatValue
+	'emergency 'heat 
+end define
+
+define heatValue
+	'heat 
+end define
+
+define coolingValue
+	'cooling	
+end define
+
+define fanOnlyValue
+	'fan 'only 
+end define
+
+define heatingValue
+	'heating 
+end define
+
+define idleValue
+	'idle 
+end define
+
+define pendingCoolValue
+	'pending 'cool 
+end define
+
+define pendingHeatValue
+	'pending 'heat 
+end define
+
+define ventEconomizerValue
+	'vent 'economizer 
+end define
+
+define canceledValue
+	'canceled 
+end define
+
+define pausedValue
+	'paused 
+end define
+
+define runningValue
+	'running 
+end define
+
+define stoppedValue
+	'stopped 
+end define
+
+define touchedValue
+	'touched 
+end define
+
+define dryValue
+	'dry 
+end define
+
+define wetValue
+	'wet 
+end define
+
+define partiallyOpenValue
+	'partially 'open
+end define
