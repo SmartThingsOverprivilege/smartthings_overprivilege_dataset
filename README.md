@@ -7,7 +7,7 @@ The datasets are divided into the following folders:
 
 1- A benchmark we created by injecting over-privilege vulnerabilities in SmartThings apps. 
 
-2- Executable programs for Static analysis ChYP and MDE ChYP.
+2- Executable programs for Static analysis-ChYP and MDE-ChYP.
 
 3- Publicly available datasets from SmartThings community, forums, marketplace and a dataset from researchers that developed HoMonit (system for monitoring smart home apps).
 
